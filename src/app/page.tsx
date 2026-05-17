@@ -11,7 +11,7 @@ import Blog from "@/components/Blog";
 
 export default function Home() {
   return (
-    <main className="bg-[#121212] min-h-screen text-white">
+    <main className="min-h-screen text-white relative z-[1]">
       <Hero />
       <AboutUsSection />
       <Projects />

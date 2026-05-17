@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { ChevronRight, Folder, Cpu, Brain } from "lucide-react";
 import Image from "next/image";
+import ProfileCard from "./ui/ProfileCard";
 
 export default function About() {
   const blocks = [
@@ -46,16 +47,25 @@ export default function About() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
-            className="relative aspect-square max-w-[360px] mx-auto md:mx-0 rounded-2xl overflow-hidden border border-white/10 group hover:shadow-[0_0_45px_rgba(99,102,241,0.35)] transition-all"
+            className="relative w-full max-w-[380px] mx-auto md:mx-0"
           >
-            <Image
-              src="/s.jpeg"
-              alt="Manuri Susatwik"
-              fill
-              priority
-              className="object-cover group-hover:scale-105 transition-transform duration-500"
+            <ProfileCard
+              name="Manuri Susatwik"
+              title="Full Stack & AI Developer"
+              handle="sathwvik"
+              status="Available for Opportunities"
+              contactText="Contact Me"
+              avatarUrl="/profile.png"
+              miniAvatarUrl="/profile.png"
+              showUserInfo={true}
+              enableTilt={true}
+              enableMobileTilt={false}
+              behindGlowEnabled={true}
+              behindGlowColor="rgba(99, 102, 241, 0.55)"
+              behindGlowSize="55%"
+              innerGradient="linear-gradient(145deg,#1e1b4b88 0%,#312e8188 40%,#0f172a88 100%)"
+              onContactClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
           </motion.div>
 
           {/* Content */}

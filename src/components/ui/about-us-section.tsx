@@ -14,6 +14,7 @@ import {
   Terminal
 } from "lucide-react";
 import Image from "next/image";
+import ProfileCard from '@/components/ui/ProfileCard';
 import { BackgroundPaths } from "./background-paths";
 
 const SERVICES = [
@@ -117,27 +118,31 @@ export default function AboutUsSection() {
             ))}
           </div>
 
-          {/* Center Column: Profile Image (Visible only on Desktop) */}
+          {/* Center Column: Profile Card (Responsive) */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="relative z-10 hidden lg:flex flex-col items-center justify-center h-full"
+            className="relative z-10 flex flex-col items-center justify-center h-full order-first lg:order-none md:col-span-2 lg:col-span-1 mb-12 lg:mb-0 w-full max-w-[340px] md:max-w-[400px] mx-auto"
           >
-            <div className="relative w-full aspect-[4/5] rounded-3xl overflow-hidden border border-white/10 group shadow-2xl shadow-primary/10">
-              <Image
-                src="/s.jpeg"
-                alt="Profile"
-                fill
-                className="object-cover group-hover:scale-105 transition-transform duration-700"
-                priority
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60" />
-            </div>
-            
-            {/* Visual Decorative Element */}
-            <div className="absolute -z-10 w-64 h-64 bg-primary/20 blur-[100px] rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+            <ProfileCard
+              name="Manuri Susatwik"
+              title="Full Stack & AI Developer"
+              handle="sathwvik"
+              status="Available for Opportunities"
+              contactText="Contact Me"
+              avatarUrl="/s.jpeg"
+              miniAvatarUrl="/s.jpeg"
+              showUserInfo={true}
+              enableTilt={true}
+              enableMobileTilt={false}
+              behindGlowEnabled={true}
+              behindGlowColor="rgba(99, 102, 241, 0.55)"
+              behindGlowSize="55%"
+              innerGradient="linear-gradient(145deg,#1e1b4b88 0%,#312e8188 40%,#0f172a88 100%)"
+              onContactClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+            />
           </motion.div>
 
           {/* Right Column Services (Desktop) / Last 3 (Tablet) */}
@@ -145,18 +150,6 @@ export default function AboutUsSection() {
             {SERVICES.slice(3, 6).map((service, index) => (
               <ServiceCard key={index + 3} service={service} index={index + 3} />
             ))}
-          </div>
-
-          {/* Mobile/Tablet Profile Image (Visible only on non-desktop) */}
-          <div className="lg:hidden flex justify-center md:col-span-2 order-first mb-12">
-            <div className="relative w-full max-w-sm aspect-[4/5] rounded-3xl overflow-hidden border border-white/10 shadow-2xl shadow-primary/5">
-              <Image
-                src="/s.jpeg"
-                alt="Profile"
-                fill
-                className="object-cover"
-              />
-            </div>
           </div>
         </div>
 

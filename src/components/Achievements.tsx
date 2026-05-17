@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { GlowingEffect } from "./ui/glowing-effect";
+import BorderGlow from "./ui/BorderGlow";
 
 const ACHIEVEMENTS = [
   {
@@ -69,19 +69,20 @@ export default function Achievements() {
             }}
           >
             {[...ACHIEVEMENTS, ...ACHIEVEMENTS, ...ACHIEVEMENTS].map((item, index) => (
-              <div
+              <BorderGlow
                 key={index}
-                className="relative w-[350px] md:w-[450px] rounded-2xl border-[0.75px] border-white/5 p-2 shrink-0 overflow-hidden"
+                className="w-[350px] md:w-[450px] shrink-0"
+                edgeSensitivity={35}
+                glowColor="260 100 80"
+                backgroundColor="#0b0b12"
+                borderRadius={28}
+                glowRadius={42}
+                glowIntensity={1.2}
+                coneSpread={24}
+                animated={false}
+                colors={['#6366f1', '#8b5cf6', '#38bdf8']}
               >
-                <GlowingEffect
-                  spread={40}
-                  glow={true}
-                  disabled={false}
-                  proximity={64}
-                  inactiveZone={0.01}
-                  borderWidth={3}
-                />
-                <div className="relative h-full p-8 rounded-xl bg-black/40 border border-white/10 backdrop-blur-sm flex flex-col">
+                <div className="relative h-full p-8 rounded-[28px] bg-black/40 border border-white/10 hover:border-white/20 transition-colors duration-300 backdrop-blur-sm flex flex-col shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
                   <div className="flex items-start gap-4 mb-6">
                     <div className="w-12 h-12 rounded-full bg-linear-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold text-lg">
                       {item.initials}
@@ -95,7 +96,7 @@ export default function Achievements() {
                     "{item.quote}"
                   </p>
                 </div>
-              </div>
+              </BorderGlow>
             ))}
           </motion.div>
         </div>
