@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import SplashCursor from "../components/SplashCursor";
+import PortfolioIntro from "../components/ui/PortfolioIntro";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -23,6 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} antialiased`}>
+        <PortfolioIntro />
         <SplashCursor />
         {children}
       </body>
