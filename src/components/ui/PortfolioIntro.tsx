@@ -24,12 +24,13 @@ export default function PortfolioIntro() {
     // 2300‑4100: draw "welcome to portfolio" (1.8s)
     // 4100‑4600: hold
     // 4600‑5000: fade out "welcome" and reveal portfolio
-    const timer1 = setTimeout(() => setCurrentStep(1), 2000); // start fade of hello
-    const timer2 = setTimeout(() => setCurrentStep(null), 4600); // start fade of welcome
+    const timer1 = setTimeout(() => setCurrentStep(1), 1800); // hello fade start (draw 0.8s + hold 1s)
+    const timer2 = setTimeout(() => setCurrentStep(null), 3800); // welcome fade start (draw 1.2s + hold 0.8s after hello)
     const timer3 = setTimeout(() => {
       setShowIntro(false);
       sessionStorage.setItem("intro_seen", "true");
-    }, 5000);
+    }, 4200); // total intro duration ~4.2s
+
 
     return () => {
       clearTimeout(timer1);
@@ -50,7 +51,7 @@ export default function PortfolioIntro() {
           key="intro-bg"
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.8, ease: "easeInOut" }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
           className="fixed inset-0 z-[9999] bg-black flex items-center justify-center overflow-hidden"
         >
           <AnimatePresence mode="wait">
@@ -66,9 +67,9 @@ export default function PortfolioIntro() {
                   text="hello"
                   autoPlay
                   color="white"
-                  strokeWidth={2.5}
+                  strokeWidth={1.6}
                   className="h-20 md:h-28 w-auto"
-                  animation={{ type: "tween", duration: 1.5, ease: "easeInOut" }}
+                  animation={{ type: "tween", duration: 0.8, ease: "easeInOut" }}
                 />
               </motion.div>
             )}
@@ -85,9 +86,9 @@ export default function PortfolioIntro() {
                   text="welcome to portfolio"
                   autoPlay
                   color="white"
-                  strokeWidth={2.5}
-                  className="h-20 md:h-28 w-auto"
-                  animation={{ type: "tween", duration: 1.8, ease: "easeInOut" }}
+                  strokeWidth={1.6}
+                  className="h-48 md:h-60 w-auto"
+                  animation={{ type: "tween", duration: 1.2, ease: "easeInOut" }}
                 />
               </motion.div>
             )}

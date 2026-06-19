@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // Project Data with Media & Layout Configuration
 const projects = [
@@ -138,15 +138,26 @@ const projects = [
 const INITIAL_VISIBLE_COUNT = 6;
 
 export default function Projects() {
+    const [mounted, setMounted] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
     const [selectedId, setSelectedId] = useState<string | null>(null);
-    const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_COUNT);
+    const [visibleCount, setVisibleCount] = useState<number>(INITIAL_VISIBLE_COUNT);
 
-    const selectedProject = projects.find((p) => p.id === selectedId);
+    // Derived data
     const visibleProjects = projects.slice(0, visibleCount);
+    const selectedProject = projects.find((p) => p.id === selectedId);
     const hasMore = visibleCount < projects.length;
 
+    useEffect(() => {
+        setMounted(true);
+        const handleResize = () => setIsMobile(window.innerWidth < 768);
+        handleResize();
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
     return (
-        <section className="relative z-20 bg-[#0a0a0a] min-h-screen py-32 px-4 md:px-12 overflow-hidden" id="projects">
+        <section className="relative z-20 bg-[#0a0a0a] min-h-screen py-32 px-4 md:px-12 overflow-visible md:overflow-hidden" id="projects">
             {/* Background Ambience */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
                 <div className="absolute top-[-20%] right-[-10%] w-[600px] h-[600px] bg-purple-600/10 rounded-full blur-[120px]" />
@@ -170,99 +181,181 @@ export default function Projects() {
                 </motion.div>
 
                 {/* Bento Grid Layout */}
-                <motion.div
-                    layout
-                    className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[minmax(280px,auto)] grid-flow-dense"
-                >
-                    <AnimatePresence mode="popLayout">
-                        {visibleProjects.map((project, index) => (
-                            <motion.div
-                                key={project.id}
-                                layoutId={project.id}
-                                onClick={() => setSelectedId(project.id)}
-                                initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                                animate={{ opacity: 1, y: 0, scale: 1 }}
-                                exit={{ opacity: 0, scale: 0.9 }}
-                                transition={{ duration: 0.3 }}
-                                viewport={{ once: true }}
-                                className={`group relative rounded-3xl overflow-hidden cursor-pointer border border-white/10 bg-white/5 backdrop-blur-md ${project.span}`}
-                                whileHover={{ scale: 1.015 }}
-                            >
-                                {/* Media Background - Always 'mediaUrl' for Grid */}
-                                <img
-                                    src={project.mediaUrl}
-                                    alt={project.title}
-                                    className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-all duration-700 group-hover:scale-110"
-                                />
-
-                                {/* Gradient Overlay */}
-                                <div className={`absolute inset-0 bg-linear-to-br ${project.color} ${project.hoverColor} transition-all duration-500 opacity-60 group-hover:opacity-80 mix-blend-overlay`} />
-
-                                {/* Darkener */}
-                                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-500" />
-
-                                {/* Noise */}
-                                <div className="absolute inset-0 opacity-[0.05] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
-
-                                <div className="absolute inset-0 p-8 flex flex-col justify-between z-10">
-                                    <div className="flex justify-between items-start">
-                                        <span className="inline-block px-3 py-1 rounded-full bg-black/40 border border-white/10 text-xs font-mono text-blue-300 backdrop-blur-md">
-                                            {project.category}
-                                        </span>
-                                        <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-white transform -rotate-45 group-hover:rotate-0 transition-transform duration-300">
-                                                <path d="M5 12h14M12 5l7 7-7 7" />
-                                            </svg>
+                <motion.div layout>
+                    {mounted && isMobile ? (
+                        <div className="relative" style={{ perspective: '1000px' }}>
+                            {visibleProjects.map((project, index) => (
+                                <motion.div
+                                    key={project.id}
+                                    layoutId={project.id}
+                                    onClick={() => setSelectedId(project.id)}
+                                    initial={{ opacity: 0, y: 20, scale: Math.max(0.94, 1 - index * 0.03) }}
+                                    whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.9 }}
+                                    transition={{ duration: 0.5, ease: "easeOut" }}
+                                    className={`group relative rounded-3xl overflow-hidden cursor-pointer border border-white/10 bg-white/5 backdrop-blur-md ${project.span}`}
+                                    whileHover={{ scale: 1.015 }}
+                                    style={{
+                                        position: "sticky",
+                                        top: "60px",
+                                        minHeight: "70vh",
+                                        maxHeight: "80vh",
+                                        width: "100%",
+                                        zIndex: index + 1,
+                                        // progressive shadow for depth perception
+                                        boxShadow: `0 ${index * 4}px ${12 + index * 4}px rgba(0,0,0,${0.15 + index * 0.07})`,
+                                        // Push subsequent cards below viewport
+                                        marginTop: index === 0 ? 0 : "80vh",
+                                        // Scale and opacity for inactive cards
+                                        transform: index === 0 ? "scale(1)" : "scale(0.95)",
+                                        opacity: index === 0 ? 1 : 0.9,
+                                    }}
+                                >
+                                    <img
+                                        src={project.mediaUrl}
+                                        alt={project.title}
+                                        className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-all duration-700 group-hover:scale-110"
+                                    />
+                                    <div className={`absolute inset-0 bg-linear-to-br ${project.color} ${project.hoverColor} transition-all duration-500 opacity-60 group-hover:opacity-80 mix-blend-overlay`} />
+                                    <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-500" />
+                                    <div className="absolute inset-0 p-8 flex flex-col justify-between z-10">
+                                        <div className="flex justify-between items-start">
+                                            <span className="inline-block px-3 py-1 rounded-full bg-black/40 border border-white/10 text-xs font-mono text-blue-300 backdrop-blur-md">
+                                                {project.category}
+                                            </span>
+                                            <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-white transform -rotate-45 group-hover:rotate-0 transition-transform duration-300">
+                                                    <path d="M5 12h14M12 5l7 7-7 7" />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        <div className="relative group/btn-container">
+                                            <h3 className="text-2xl font-bold text-white mb-2 leading-tight group-hover:translate-x-1 transition-transform drop-shadow-lg">
+                                                {project.title}
+                                            </h3>
+                                            <p className="text-gray-200 text-sm line-clamp-3 leading-relaxed opacity-90 group-hover:opacity-100 transition-opacity drop-shadow-md pr-20">
+                                                {project.description}
+                                            </p>
+                                            {project.demo !== "#" && (
+                                                <div className="absolute bottom-0 right-0 z-20">
+                                                    <div className="relative group/tooltip">
+                                                        <motion.a
+                                                            href={project.demo}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            onClick={(e) => e.stopPropagation()}
+                                                            whileHover={{
+                                                                scale: 1.1,
+                                                                boxShadow: "0 0 20px rgba(255,255,255,0.3)"
+                                                            }}
+                                                            whileTap={{ scale: 0.95 }}
+                                                            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-bold backdrop-blur-md transition-colors"
+                                                        >
+                                                            Live Demo
+                                                            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                                            </svg>
+                                                        </motion.a>
+                                                        <span className="absolute -top-10 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap border border-white/10 z-30">
+                                                            View Live Project
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            )}
+                                            <div className="flex flex-wrap gap-2 mt-4 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-4 group-hover:translate-y-0">
+                                                {project.techStack.slice(0, 3).map(t => (
+                                                    <span key={t} className="text-[10px] uppercase tracking-wider text-white/80 bg-black/40 px-2 py-1 rounded backdrop-blur-sm border border-white/5">
+                                                        {t}
+                                                    </span>
+                                                ))}
+                                            </div>
                                         </div>
                                     </div>
-
-                                    <div className="relative group/btn-container">
-                                        <h3 className="text-2xl font-bold text-white mb-2 leading-tight group-hover:translate-x-1 transition-transform drop-shadow-lg">{project.title}</h3>
-                                        <p className="text-gray-200 text-sm line-clamp-3 leading-relaxed opacity-90 group-hover:opacity-100 transition-opacity drop-shadow-md pr-20">
-                                            {project.description}
-                                        </p>
-
-                                        {project.demo !== "#" && (
-                                            <div className="absolute bottom-0 right-0 z-20">
-                                                <div className="relative group/tooltip">
-                                                    <motion.a
-                                                        href={project.demo}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        onClick={(e) => e.stopPropagation()}
-                                                        whileHover={{
-                                                            scale: 1.1,
-                                                            boxShadow: "0 0 20px rgba(255,255,255,0.3)"
-                                                        }}
-                                                        whileTap={{ scale: 0.95 }}
-                                                        className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-bold backdrop-blur-md transition-colors"
-                                                    >
-                                                        Live Demo
-                                                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                                        </svg>
-                                                    </motion.a>
-
-                                                    {/* Tooltip */}
-                                                    <span className="absolute -top-10 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap border border-white/10 z-30">
-                                                        View Live Project
-                                                    </span>
+                                </motion.div>
+                            ))}
+                        </div>
+                    ) : (
+                        <motion.div layout className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[minmax(280px,auto)] grid-flow-dense">
+                            <AnimatePresence mode="popLayout">
+                                {visibleProjects.map((project, index) => (
+                                    <motion.div
+                                        key={project.id}
+                                        layoutId={project.id}
+                                        onClick={() => setSelectedId(project.id)}
+                                        initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                                        exit={{ opacity: 0, scale: 0.9 }}
+                                        transition={{ duration: 0.3 }}
+                                        viewport={{ once: true }}
+                                        className={`group relative rounded-3xl overflow-hidden cursor-pointer border border-white/10 bg-white/5 backdrop-blur-md ${project.span}`}
+                                        whileHover={{ scale: 1.015 }}
+                                    >
+                                        <img
+                                            src={project.mediaUrl}
+                                            alt={project.title}
+                                            className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-all duration-700 group-hover:scale-110"
+                                        />
+                                        <div className={`absolute inset-0 bg-linear-to-br ${project.color} ${project.hoverColor} transition-all duration-500 opacity-60 group-hover:opacity-80 mix-blend-overlay`} />
+                                        <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-500" />
+                                        <div className="absolute inset-0 opacity-[0.05] bg-[url('/noise.svg')]" />
+                                        <div className="absolute inset-0 p-8 flex flex-col justify-between z-10">
+                                            <div className="flex justify-between items-start">
+                                                <span className="inline-block px-3 py-1 rounded-full bg-black/40 border border-white/10 text-xs font-mono text-blue-300 backdrop-blur-md">
+                                                    {project.category}
+                                                </span>
+                                                <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-white transform -rotate-45 group-hover:rotate-0 transition-transform duration-300">
+                                                        <path d="M5 12h14M12 5l7 7-7 7" />
+                                                    </svg>
                                                 </div>
                                             </div>
-                                        )}
-
-                                        <div className="flex flex-wrap gap-2 mt-4 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-4 group-hover:translate-y-0">
-                                            {project.techStack.slice(0, 3).map(t => (
-                                                <span key={t} className="text-[10px] uppercase tracking-wider text-white/80 bg-black/40 px-2 py-1 rounded backdrop-blur-sm border border-white/5">
-                                                    {t}
-                                                </span>
-                                            ))}
+                                            <div className="relative group/btn-container">
+                                                <h3 className="text-2xl font-bold text-white mb-2 leading-tight group-hover:translate-x-1 transition-transform drop-shadow-lg">
+                                                    {project.title}
+                                                </h3>
+                                                <p className="text-gray-200 text-sm line-clamp-3 leading-relaxed opacity-90 group-hover:opacity-100 transition-opacity drop-shadow-md pr-20">
+                                                    {project.description}
+                                                </p>
+                                                {project.demo !== "#" && (
+                                                    <div className="absolute bottom-0 right-0 z-20">
+                                                        <div className="relative group/tooltip">
+                                                            <motion.a
+                                                                href={project.demo}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                onClick={(e) => e.stopPropagation()}
+                                                                whileHover={{
+                                                                    scale: 1.1,
+                                                                    boxShadow: "0 0 20px rgba(255,255,255,0.3)"
+                                                                }}
+                                                                whileTap={{ scale: 0.95 }}
+                                                                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-bold backdrop-blur-md transition-colors"
+                                                            >
+                                                                Live Demo
+                                                                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                                                </svg>
+                                                            </motion.a>
+                                                            <span className="absolute -top-10 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none whitespace-nowrap border border-white/10 z-30">
+                                                                View Live Project
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                                <div className="flex flex-wrap gap-2 mt-4 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-4 group-hover:translate-y-0">
+                                                    {project.techStack.slice(0, 3).map(t => (
+                                                        <span key={t} className="text-[10px] uppercase tracking-wider text-white/80 bg-black/40 px-2 py-1 rounded backdrop-blur-sm border border-white/5">
+                                                            {t}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                            </motion.div>
-                        ))}
-                    </AnimatePresence>
+                                    </motion.div>
+                                ))}
+                            </AnimatePresence>
+                        </motion.div>
+                    )}
                 </motion.div>
 
                 {/* Pagination Buttons */}

@@ -7,7 +7,7 @@ import {
   useTransform,
   MotionValue,
 } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import Link from "next/link";
 
 // Icons (Using simple SVGs or lucid-react if available, but I'll use SVG here for zero-deps)
@@ -51,6 +51,16 @@ const DOCK_ITEMS = [
 
 export default function Dock() {
   const mouseX = useMotionValue(Infinity);
+  const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    setIsMobile(window.innerWidth < 640);
+    const handleResize = () => setIsMobile(window.innerWidth < 640);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <div className="fixed bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 z-50 w-full max-w-[95vw] sm:max-w-none flex justify-center pointer-events-none">
@@ -59,9 +69,9 @@ export default function Dock() {
         onMouseLeave={() => mouseX.set(Infinity)}
         className="flex h-12 sm:h-16 items-end gap-1.5 sm:gap-4 rounded-2xl border border-white/10 bg-white/5 px-2 sm:px-4 pb-1.5 sm:pb-3 backdrop-blur-md overflow-x-auto sm:overflow-visible [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] pointer-events-auto"
       >
-        {DOCK_ITEMS.map((item) => (
-          <DockIcon key={item.id} mouseX={mouseX} item={item} />
-        ))}
+    {DOCK_ITEMS.map((item) => (
+      <DockIcon key={item.id} mouseX={mouseX} item={item} isMobile={isMobile} mounted={mounted} />
+    ))}
       </motion.div>
     </div>
   );
@@ -70,9 +80,13 @@ export default function Dock() {
 function DockIcon({
   mouseX,
   item,
+  isMobile,
+  mounted,
 }: {
   mouseX: MotionValue;
   item: (typeof DOCK_ITEMS)[0];
+  isMobile: boolean;
+  mounted: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -82,10 +96,8 @@ function DockIcon({
   });
 
   const widthSync = useTransform(distance, (val) => {
-    const isMobile = typeof window !== "undefined" && window.innerWidth < 640;
-    const baseW = isMobile ? 32 : 40;
-    const maxW = isMobile ? 40 : 80;
-
+    const baseW = mounted ? (isMobile ? 32 : 40) : 40;
+    const maxW = mounted ? (isMobile ? 40 : 80) : 80;
     const absVal = Math.abs(val);
     if (absVal > 150) return baseW;
     const percentage = 1 - absVal / 150;
