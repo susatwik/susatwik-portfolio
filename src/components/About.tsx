@@ -52,7 +52,7 @@ export default function About() {
             <ProfileCard
               name="Manuri Susatwik"
               title="Full Stack & AI Developer"
-              handle="susatwik"
+              handle=" susatwik "
               status="Available for Opportunities"
               contactText="Contact Me"
               avatarUrl="/profile.png"
