@@ -47,7 +47,7 @@ export default function Hero() {
 
   return (
     <div
-      className="relative min-h-screen w-full flex flex-col md:flex-row items-center justify-center md:items-start md:justify-start px-6 md:px-12 py-8 md:py-20 overflow-hidden bg-black"
+      className="relative min-h-screen w-full grid md:grid-cols-2 items-start justify-start gap-12 px-6 md:px-12 py-8 md:py-20 overflow-hidden bg-black"
       id="home"
     >
       {/* Background grid */}
@@ -62,13 +62,10 @@ export default function Hero() {
         />
       </div>
 
-      {/* Lanyard – only on desktop */}
-      <div className="hidden md:block absolute inset-0 z-10 pointer-events-none">
-        <LanyardCanvas />
-      </div>
+
 
       {/* Hero content */}
-      <div className="relative z-20 w-full md:w-1/2 flex flex-col items-start text-left space-y-4">
+      <div className="relative z-20 w-full md:w-[560px] flex flex-col items-start text-left space-y-4">
         {/* Availability badge */}
         <motion.span
           initial={{ opacity: 0, y: -10 }}
@@ -158,8 +155,10 @@ export default function Hero() {
 
       </div>
 
-      {/* Right‑side spacer on desktop */}
-      <div className="hidden md:block w-1/2 h-full pointer-events-none" />
+       {/* Right‑side column with Lanyard */}
+       <div className="hidden md:block w-1/2 h-full pointer-events-none">
+         <LanyardCanvas />
+       </div>
 
       {/* Scroll indicator – hide on mobile */}
       <div className="hidden md:block">

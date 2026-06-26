@@ -129,7 +129,7 @@ export default function AboutUsSection() {
             <ProfileCard
               name="Manuri Susatwik"
               title="Full Stack & AI Developer"
-              handle="sathwvik"
+              handle="susatwik"
               status="Available for Opportunities"
               contactText="Contact Me"
               avatarUrl="/s.jpeg"

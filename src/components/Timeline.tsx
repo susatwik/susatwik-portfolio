@@ -5,6 +5,13 @@ import { useRef } from "react";
 
 const TIMELINE_DATA = [
   {
+    year: "May 2026 – Present",
+    title: "Lead Socratic Agent Developer",
+    org: "National Institute of Technology Andhra Pradesh (NIT Andhra Pradesh)",
+    description: "Leading the development of the AI-powered Socratic Learning Agent for the iMentor Intelligent Tutoring System. Building GraphRAG-based retrieval using Neo4j and Qdrant. Developing voice-first AI learning experiences using modern LLM workflows. Working with React, Next.js, Node.js, FastAPI, LangChain, Gemini, Redis, MongoDB, Neo4j and Qdrant. Designing scalable AI architecture, retrieval pipelines, and intelligent tutoring workflows.",
+    type: "work",
+  },
+  {
     year: "2025",
     title: "AI Intern",
     org: "Infosys Springboard",
