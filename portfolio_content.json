@@ -1,0 +1,40 @@
+{
+  "personalInformation": {
+    "fullName": "Manuri Susatwik",
+    "professionalTitle": "Full Stack & AI Developer",
+    "tagline": null,
+    "shortBio": "Full-stack developer building AI-powered web platforms, real-time systems, and interactive applications.",
+    "longAboutMe": "Who I Am: Full-stack developer building AI-powered web platforms, real-time systems, and interactive applications.\nWhat I Build: I build products like gamified learning platforms (Learn Spark Arcade), AI assistants, and scalable modern web systems.\nWhat Problems I Solve: I turn complex ideas into simple, high-performance digital products that people actually use.",
+    "currentPosition": "AI-powered Socratic Learning Agent for the iMentor Intelligent Tutoring System",
+    "yearsOfExperience": null
+  },
+  "contactInformation": {
+    "email": "sathwvikmanuri@gmail.com",
+    "phoneNumber": null,
+    "address": null,
+    "city": null,
+    "state": null,
+    "country": null,
+    "timezone": null,
+    "availability": null
+  },
+  "socialLinks": {
+    "github": "https://github.com/susatwik",
+    "linkedin": "https://www.linkedin.com/in/sathwvik-manuri/",
+    "twitter": null,
+    "portfolio": null
+  },
+  "skills": {},
+  "experience": [],
+  "projects": [],
+  "education": [],
+  "certifications": [],
+  "achievements": [],
+  "leadership": [],
+  "workshopsEvents": [],
+  "testimonials": [],
+  "blogs": [],
+  "resume": null,
+  "imagesAssets": {},
+  "seo": {}
+}

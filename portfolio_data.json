@@ -1,0 +1,59 @@
+{
+  "personalInformation": {
+    "fullName": "Manuri Susatwik - Interactive Portfolio",
+    "professionalTitle": "Immersive Design:",
+    "tagline": null,
+    "shortBio": null,
+    "longAboutMe": null,
+    "currentPosition": null,
+    "yearsOfExperience": null
+  },
+  "contactInformation": {
+    "email": "your-email@gmail.com",
+    "phoneNumber": null,
+    "address": null,
+    "city": null,
+    "state": null,
+    "country": null,
+    "timezone": null,
+    "availability": null
+  },
+  "socialLinks": {
+    "portfolio": "http://www.w3.org/2000/svg",
+    "github": "https://github.com/susatwik",
+    "linkedin": "https://www.linkedin.com/in/sathwvik-manuri/",
+    "twitter": "https://twitter.com/"
+  },
+  "skills": {
+    "ProgrammingLanguages": null,
+    "Frontend": null,
+    "Backend": null,
+    "Databases": null,
+    "AI/MachineLearning": null,
+    "Cloud": null,
+    "DevOps": null,
+    "Frameworks": null,
+    "Libraries": null,
+    "APIs": null,
+    "Tools": null,
+    "Design": null,
+    "OtherTechnologies": null
+  },
+  "experience": [],
+  "projects": [],
+  "education": [],
+  "certifications": [],
+  "achievements": [],
+  "leadership": [],
+  "workshopsEvents": [],
+  "testimonials": [],
+  "blogs": [],
+  "resume": null,
+  "imagesAssets": {},
+  "seo": {},
+  "navigation": [],
+  "footer": {},
+  "theme": {},
+  "components": [],
+  "integrations": []
+}
