@@ -137,10 +137,20 @@ const projects = [
 
 ];
 
+// Type derived from the projects array
+export type Project = typeof projects[number];
+
+type ProjectCardProps = {
+  project: Project;
+  index: number;
+  isMobile: boolean;
+  onSelect: (id: string) => void;
+};
+
 const INITIAL_VISIBLE_COUNT = 4;
 
 // Memoized Project Card – prevents unnecessary re‑renders
-const ProjectCard = memo(function ProjectCard({ project, index, isMobile, onSelect }) {
+const ProjectCard = memo(function ProjectCard({ project, index, isMobile, onSelect }: ProjectCardProps) {
     const commonProps = {
         onClick: () => onSelect(project.id),
         className: `group relative rounded-3xl overflow-hidden cursor-pointer border border-white/10 bg-white/5 backdrop-blur-md ${project.span}`,
@@ -299,9 +309,15 @@ const ProjectCard = memo(function ProjectCard({ project, index, isMobile, onSele
         </motion.div>
     );
 });
+// End of ProjectCard component
 
 // Modal rendered via React Portal – isolates it from the Projects DOM tree
-function ProjectModal({ project, onClose }) {
+
+type ProjectModalProps = {
+  project: Project;
+  onClose: () => void;
+};
+function ProjectModal({ project, onClose }: ProjectModalProps) {
     return createPortal(
         <>
             <AnimatePresence>
@@ -409,10 +425,11 @@ function ProjectModal({ project, onClose }) {
     );
 }
 
+
 export default function Projects() {
     const [mounted, setMounted] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
-    const [selectedId, setSelectedId] = useState(null);
+    const [selectedId, setSelectedId] = useState<string | null>(null);
 
     const selectedProject = useMemo(() => projects.find(p => p.id === selectedId), [selectedId]);
 
@@ -445,7 +462,7 @@ export default function Projects() {
         }
     }, [selectedId]);
 
-    const handleSelect = useCallback(id => setSelectedId(id), []);
+    const handleSelect = useCallback((id: string) => setSelectedId(id), []);
     const handleClose = useCallback(() => setSelectedId(null), []);
 
     return (
